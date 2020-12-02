@@ -14,6 +14,7 @@ public class Myrealm extends AuthorizingRealm {
         String usrename = (String) principalCollection.getPrimaryPrincipal();
 
         return null;
+
     }
 
     //认证
