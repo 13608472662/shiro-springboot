@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.baizhi.dao.AdminDao">
+    <resultMap id="myMap" type="Admin">
+        <id column="admin_id" property="id"/>
+        <result column="username" property="username"/>
+        <result column="password" property="password"/>
+        <result column="salt" property="salt"/>
+        <collection property="role" ofType="Role">
+            <id column="role_id" property="id"/>
+            <result column="role_name" property="rolename"/>
+            <collection property="authority" ofType="Authority">
+                <id column="authority_id" property="id"/>
+                <result column="authority_name" property="authorityname"/>
+            </collection>
+        </collection>
+    </resultMap>
+    <select id="selectByName" resultType="Admin">
+        select * from s_admin where username=#{username}
+    </select>
+    <select id="selctAllByName" resultMap="myMap">
+        select a.*,r.role_name,ah.authority_name from s_admin a
+        left join s_admin_role ar on a.admin_id=ar.admin_id
+        left join s_role  r on r.role_id=ar.role_id
+        left join s_role_authority ra on r.role_id=ra.role_id
+        left join s_authority ah on ra.authority_id=ah.authority_id
+        where username=#{username}
+    </select>
+</mapper>

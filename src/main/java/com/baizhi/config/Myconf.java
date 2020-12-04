@@ -3,6 +3,7 @@ package com.baizhi.config;
 
 import com.baizhi.realm.Myrealm;
 import org.apache.shiro.authc.credential.HashedCredentialsMatcher;
+import org.apache.shiro.cache.ehcache.EhCacheManager;
 import org.apache.shiro.spring.web.ShiroFilterFactoryBean;
 import org.apache.shiro.web.mgt.CookieRememberMeManager;
 import org.apache.shiro.web.mgt.DefaultWebSecurityManager;
@@ -39,7 +40,7 @@ public class Myconf {
 
     @Bean
     //创建web的SecurityManager
-    public DefaultWebSecurityManager getDefaultSecurityManager(Myrealm myrealm, DefaultWebSessionManager defaultWebSessionManager, CookieRememberMeManager cookieRememberMeManager) {
+    public DefaultWebSecurityManager getDefaultSecurityManager(Myrealm myrealm, DefaultWebSessionManager defaultWebSessionManager, CookieRememberMeManager cookieRememberMeManager, EhCacheManager ehCacheManager) {
         DefaultWebSecurityManager defaultWebSecurityManager = new DefaultWebSecurityManager();
 
         //将自定义Realm交给安全管理器
@@ -49,6 +50,8 @@ public class Myconf {
         //将记住我管理器交给安全管理器
 
         defaultWebSecurityManager.setRememberMeManager(cookieRememberMeManager);
+        //将缓存管理器交给安全管理器
+        defaultWebSecurityManager.setCacheManager(ehCacheManager);
         return defaultWebSecurityManager;
     }
 
@@ -100,5 +103,12 @@ public class Myconf {
         //设置过期时间  单位秒
         simpleCookie.setMaxAge(1 * 60 * 5);
         return simpleCookie;
+    }
+
+    //创建缓存管理器交给Spring工厂管理
+    @Bean
+    public EhCacheManager getEhCacheManager() {
+        EhCacheManager ehCacheManager = new EhCacheManager();
+        return ehCacheManager;
     }
 }
